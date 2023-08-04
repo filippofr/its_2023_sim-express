@@ -1,5 +1,5 @@
-import { IsInt, Min, Max, IsMongoId, IsString, IsOptional, IsDate, IsBoolean } from "class-validator";
-import { Type } from 'class-transformer';
+import { IsMongoId, IsString, IsOptional, IsDate, IsBoolean } from "class-validator";
+import { Transform, Type } from 'class-transformer';
 
 export class AddTodoDTO {
   @IsString()
@@ -18,4 +18,26 @@ export class AddTodoDTO {
 export class SetCompletedDTO {
   @IsMongoId()
   id: string;
+}
+
+export class QueryTodoDTO {
+  @IsBoolean()
+  @Transform(({ value }) => {
+    value = value.toLowerCase();
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @IsOptional()
+  showCompleted: boolean;
+}
+
+export class AssignmentParamsDTO {
+  @IsMongoId()
+  id: string;
+}
+
+export class AssignmentBodyDTO {
+  @IsMongoId()
+  userId: string;
 }

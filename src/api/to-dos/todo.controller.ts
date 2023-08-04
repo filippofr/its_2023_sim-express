@@ -2,12 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import { TypedRequest } from "../../utils/typed-request.interface";
 import { NotFoundError } from "../../errors/not-found";
 import todosService from "./todo.service";
-import { AddTodoDTO, SetCompletedDTO } from "./todo.dto";
+import { AddTodoDTO, SetCompletedDTO, QueryTodoDTO, AssignmentParamsDTO, AssignmentBodyDTO } from "./todo.dto";
 import { Todo } from "./todo.entity";
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list = async (req: TypedRequest<any, QueryTodoDTO>, res: Response, next: NextFunction) => {
   const user = req.user!;
-  const list = await todosService.find(user.id!);
+  const valueCompleted = req.query.showCompleted;
+  console.log('showCompleted: ', valueCompleted);
+  const list = await todosService.find(user.id!, valueCompleted);
   res.json(list);
 };
 
@@ -46,7 +48,7 @@ export const setComplete = async (
     }
 }
 
-export const setDecomplete = async (
+export const setUncomplete = async (
   req: TypedRequest<any, any, SetCompletedDTO>,
   res: Response,
   next: NextFunction) => {
@@ -54,6 +56,21 @@ export const setDecomplete = async (
     
     try {
       const updated = await todosService.update(id, {completed: false});
+      res.json(updated);
+    } catch(err: any) {
+      next(err);
+    }
+}
+
+export const assign = async (
+  req: TypedRequest<AssignmentBodyDTO, any, AssignmentParamsDTO>,
+  res: Response,
+  next: NextFunction) => {
+    const id = req.params.id;
+    const userId = req.body.userId;
+    
+    try {
+      const updated = await todosService.update(id, {assignedTo: userId});
       res.json(updated);
     } catch(err: any) {
       next(err);
