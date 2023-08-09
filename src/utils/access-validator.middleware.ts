@@ -1,29 +1,24 @@
-import { plainToClass } from "class-transformer";
 import { NextFunction, Request, Response } from "express";
-import { validate as classValidate } from 'class-validator';
-import { ValidationError } from "../errors/validation";
 import { TypedRequest } from "./typed-request.interface";
-import { NotFoundError } from "../errors/not-found";
 import { Todos as TodoModel } from '../api/to-dos/todo.model'
-import { MissingTokenError } from "../errors/missing-token";
 
-export const AccessValidator = (type: 'two' | 'one' = 'two') => {
+export const accessValidator = (type: 'set' | 'assign' = 'set') => {
   return async (req: TypedRequest<any, any, any>, res: Response, next: NextFunction) => {
     const userId = req.user!.id;
     const todoId = req.params.id;
 
-    const q: any = {
+    const query: any = {
       createdBy: userId,
     };
 
-    if (type === 'two') {
-      q.$or = [{ assignedTo: userId }, { _id: todoId }];
+    if (type === 'set') {
+      query.$or = [{ assignedTo: userId }, { _id: todoId }];
     } else {
-      q._id = todoId;
+      query._id = todoId;
     }
 
     try {
-      const todo = await TodoModel.findOne(q);
+      const todo = await TodoModel.findOne(query);
 
       if (todo) {
         next();
