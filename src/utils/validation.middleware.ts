@@ -1,5 +1,5 @@
 import { plainToClass } from "class-transformer";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { validate as classValidate } from 'class-validator';
 import { ValidationError } from "../errors/validation";
 import { TypedRequest } from "./typed-request.interface";

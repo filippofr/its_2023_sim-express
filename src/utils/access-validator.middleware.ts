@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { TypedRequest } from "./typed-request.interface";
 import { Todos as TodoModel } from '../api/to-dos/todo.model'
 
@@ -8,13 +8,13 @@ export const accessValidator = (type: 'set' | 'assign' = 'set') => {
     const todoId = req.params.id;
 
     const query: any = {
-      createdBy: userId,
+      _id: todoId
     };
 
     if (type === 'set') {
-      query.$or = [{ assignedTo: userId }, { _id: todoId }];
+      query.$or = [{ assignedTo: userId }, { createdBy: userId }];
     } else {
-      query._id = todoId;
+      query.createdBy = userId;
     }
 
     try {

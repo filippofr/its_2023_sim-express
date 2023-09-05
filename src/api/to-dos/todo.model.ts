@@ -11,7 +11,7 @@ const TodoSchema = new Schema<Todo>({
 })
 
 TodoSchema.virtual("expired").get(function() {
-  return checkIfExpired(this.dueDate!);
+  return checkIfExpired(this.dueDate!, this.completed!);
 })
 
 TodoSchema.set('toJSON', {

@@ -1,8 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { TypedRequest } from "../../utils/typed-request.interface";
-import { NotFoundError } from "../../errors/not-found";
 import todosService from "./todo.service";
-import { AddTodoDTO, SetCompletedDTO, QueryTodoDTO, AssignmentParamsDTO, AssignmentBodyDTO } from "./todo.dto";
+import { AddTodoDTO, SetCompletedDTO, QueryTodoDTO, AssignmentParamsDTO, AssignmentBodyDTO, DeleteDTO } from "./todo.dto";
 import { Todo } from "./todo.entity";
 
 export const list = async (req: TypedRequest<any, QueryTodoDTO>, res: Response, next: NextFunction) => {
@@ -72,6 +71,20 @@ export const assign = async (
     try {
       const updated = await todosService.update(id, {assignedTo: userId});
       res.json(updated);
+    } catch(err: any) {
+      next(err);
+    }
+}
+
+export const remove = async (
+  req: TypedRequest<DeleteDTO, any, any>, 
+  res: Response, 
+  next: NextFunction) => {
+    const id = req.params.id;
+    try {
+      await todosService.remove(id);
+      res.status(204);
+      res.send();
     } catch(err: any) {
       next(err);
     }

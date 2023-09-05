@@ -25,14 +25,7 @@ export const validationErrorHandler = (err: Error, req: Request, res: Response, 
         value: err.value
       }))
     });
-
-    // err.originalErrors.map(err => {
-    //   return {
-    //     property: err.property,
-    //     constraints: err.constraints,
-    //     value: err.value
-    //   }
-    // })
+    
   } else {
     next(err);
   }

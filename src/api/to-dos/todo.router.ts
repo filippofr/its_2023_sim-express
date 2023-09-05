@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { validate } from "../../utils/validation.middleware";
 import { isAuthenticated } from "../../utils/auth/authenticated.middleware";
-import { AddTodoDTO, QueryTodoDTO, SetCompletedDTO, AssignmentParamsDTO, AssignmentBodyDTO } from "./todo.dto";
-import { add, assign, list, setComplete, setUncomplete } from "./todo.controller";
+import { AddTodoDTO, QueryTodoDTO, SetCompletedDTO, AssignmentParamsDTO, AssignmentBodyDTO, DeleteDTO } from "./todo.dto";
+import { add, assign, list, remove, setComplete, setUncomplete } from "./todo.controller";
 import { accessValidator } from "../../utils/access-validator.middleware";
 
 
@@ -23,6 +23,10 @@ router.post('/:id/assign',
             accessValidator('assign'),
             validate(AssignmentParamsDTO, 'params'), validate(AssignmentBodyDTO, 'body'),
             assign);
+router.delete('/:id',
+              accessValidator('assign'),
+              validate(DeleteDTO, 'params'),
+              remove);
 
 
 export default router;

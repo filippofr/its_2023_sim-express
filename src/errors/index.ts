@@ -7,7 +7,7 @@ import { validationErrorHandler } from "./validation";
 export const errorHandlers = [
   notFoundHandler,
   validationErrorHandler,
-  genericErrorHandler,
   userExistHandler,
-  missingTokenHandler
+  missingTokenHandler,
+  genericErrorHandler
 ];

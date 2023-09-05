@@ -41,3 +41,8 @@ export class AssignmentBodyDTO {
   @IsMongoId()
   userId: string;
 }
+
+export class DeleteDTO {
+  @IsMongoId()
+  id: string;
+}
